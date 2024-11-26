@@ -1,0 +1,90 @@
+package com.xworkz.meshoo.dto;
+
+import javax.annotation.Generated;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "order_details")
+
+public class MeshooDto {
+
+	@Id
+	private int id;
+
+	@Column(name = "item_name")
+	private String itemName;
+
+	@Column(name = "item_cost")
+	private double cost;
+
+	private int quantity;
+	private String color;
+	private String brand;
+	
+	public MeshooDto() {
+		System.out.println("no-arg const in MeshooDto");
+	}
+
+	public MeshooDto(int id, String itemName, double cost, int quantity, String color, String brand) {
+		super();
+		this.id = id;
+		this.itemName = itemName;
+		this.cost = cost;
+		this.quantity = quantity;
+		this.color = color;
+		this.brand = brand;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public double getCost() {
+		return cost;
+	}
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+}
