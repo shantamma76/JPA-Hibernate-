@@ -1,12 +1,12 @@
 package com.xworkz.meshoo.dto;
 
-import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "order_details")
@@ -14,6 +14,8 @@ import javax.persistence.Table;
 public class MeshooDto {
 
 	@Id
+	@GenericGenerator(name = "shanta", strategy = "increment")
+	@GeneratedValue(generator = "shanta")
 	private int id;
 
 	@Column(name = "item_name")
@@ -25,14 +27,13 @@ public class MeshooDto {
 	private int quantity;
 	private String color;
 	private String brand;
-	
+
 	public MeshooDto() {
 		System.out.println("no-arg const in MeshooDto");
 	}
 
-	public MeshooDto(int id, String itemName, double cost, int quantity, String color, String brand) {
+	public MeshooDto(String itemName, double cost, int quantity, String color, String brand) {
 		super();
-		this.id = id;
 		this.itemName = itemName;
 		this.cost = cost;
 		this.quantity = quantity;

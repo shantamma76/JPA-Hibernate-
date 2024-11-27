@@ -19,7 +19,7 @@ public class MeshooRunner {
 		try {
 			et.begin();
 
-			MeshooDto meshooDto = new MeshooDto(10, "lipbalm", 90, 2, "pink", "vaseline");
+			MeshooDto meshooDto = new MeshooDto("chipes", 50, 2, "red chilly", "bingo");
 
 			em.persist(meshooDto);
 			et.commit();
