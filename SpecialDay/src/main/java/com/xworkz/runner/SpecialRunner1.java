@@ -20,8 +20,8 @@ public class SpecialRunner1 {
 
 		// Getting a All Data
 
-		Query query1 = em.createNamedQuery("findAll");
-		List<SpecialEntity> list = query1.getResultList();
+		Query query = em.createNamedQuery("findAll");
+		List<SpecialEntity> list = query.getResultList();
 		list.forEach(ref -> System.out.println(ref));
 
 		try {
@@ -37,7 +37,5 @@ public class SpecialRunner1 {
 			em.close();
 			emf.close();
 		}
-
 	}
-
 }

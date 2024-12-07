@@ -10,14 +10,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "birth_day")
-//@NamedQuery(name = "findByProfessorId", query = "Select ie from specialEntity ie where ie.professorId= :profId")
-
 @NamedQuery(name = "findAll", query = "Select ie from SpecialEntity ie")
-
-@NamedQuery(name = "findNameByGender", query = "Select ie.name from SpecialEntity ie where ie.dop= :getDob")
+@NamedQuery(name="findNameByDob", query="Select ie.name from SpecialEntity ie where ie.dob= :getDob")
 @NamedQuery(name = "findSalaryById", query = "Select ie.salary From SpecialEntity ie where ie.id = :setId")
-@NamedQuery(name = "findMobileNoByName", query = "Select ie.mobileNo from SpecialEntity ie where ie.name= :setName")
-
+@NamedQuery(name = "findMobileNoByName", query = "Select ie.mobile from SpecialEntity ie where ie.name= :setName")
 public class SpecialEntity {
 
 	@Id
@@ -94,5 +90,13 @@ public class SpecialEntity {
 	public void setSalary(double salary) {
 		this.salary = salary;
 	}
+
+	@Override
+	public String toString() {
+		return "SpecialEntity [id=" + id + ", name=" + name + ", dob=" + dob + ", gender=" + gender + ", mobile="
+				+ mobile + ", salary=" + salary + "]";
+	}
+	
+	
 
 }
