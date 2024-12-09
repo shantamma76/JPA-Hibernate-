@@ -14,9 +14,12 @@ import javax.persistence.Table;
 @Table(name = "hospital_table")
 
 @NamedQuery(name = "getAll", query = "select gl from HospitalEntity gl")
+
 @NamedQuery(name = "getById", query = "select gl.hospitalName, gl.email from HospitalEntity gl where gl.id= :id")
 
 @NamedQuery(name = "getCountByAge", query = "select count(gl) from HospitalEntity gl where gl.age> :age")
+
+
 
 @NamedQuery(name = "getSingleAll", query = "select gl from HospitalEntity gl where gl.id= :id")
 
@@ -28,6 +31,9 @@ import javax.persistence.Table;
 
 @NamedQuery(name = "updateByName&Email", query = "update HospitalEntity gl set gl.weight= :weight where gl.hospitalName= :name and gl.email= :email")
 
+@NamedQuery(name = "getCountByName&Email", query = "select count(gl) from HospitalEntity gl where gl.hospitalName= :hospitalName and gl.email= :email")
+
+//@NamedQuery(name="getCountByEmailAndDate",query="select count(se) from ScholarshipEntity se where se.email= :email and se.registrationDate= :registrationDate")
 public class HospitalEntity {
 
 	@Id
