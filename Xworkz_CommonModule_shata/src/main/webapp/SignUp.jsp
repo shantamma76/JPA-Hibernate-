@@ -24,44 +24,119 @@
                 <form action="signup" method="post">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" required>
+                        <input type="text" class="form-control" id="name" onChange="onNameChange()" name="name" placeholder="Enter Name" required>
+                        <span  id="nameDemo"></span>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" required>
+                        <input type="email" class="form-control" id="email" name="email" onChange="onEmailChange()" placeholder="Enter Email" required>
+                        <span id="emailDemo"></span>
                     </div>
 
                     <div class="mb-3">
                         <label for="phoneNo" class="form-label">Phone Number</label>
-                        <input type="number" class="form-control" id="phoneNo" name="phone" placeholder="Enter Phone Number" pattern="[0-9]{10}" required>
+                        <input type="number" class="form-control" id="phoneNo" onChange="onPhoneChange()" name="phone"  placeholder="Enter Phone Number" pattern="[0-9]{10}" required>
+                        <span id="phoneDemo"></span>
                     </div>
 
                      <div class="mb-3">
                           <label for="email" class="form-label">Alter Email</label>
-                          <input type="email" class="form-control" id="email" name="alterEmail" placeholder="Enter Alter Email" required>
+                          <input type="email" class="form-control" id="email" onChange="onAltEmailChange()" name="alterEmail"  placeholder="Enter Alter Email" required>
+                     <span id="altEmailDemo"></span>
                      </div>
 
                         <div class="mb-3">
                               <label for="phoneNo" class="form-label">Alternate Phone Number</label>
-                              <input type="number" class="form-control" id="phoneNo" name="alterPhone" placeholder="Enter Alter Number" required>
+                              <input type="number" class="form-control" id="phoneNo" onChange="onAltPhoneChange()" name="alterPhone"  placeholder="Enter Alter Number" required>
+                            <span id="altPhoneDemo"></span>
                          </div>
 
                         <div class="mb-3">
                         <label for="location" class="form-label">Location</label>
-                                <input type="text" class="form-control" id="location" name="location" placeholder="Enter Location" required>
+                                <input type="text" class="form-control" id="location" onChange="onLocationChange()" name="location"  placeholder="Enter Location" required>
+                                <span id="locationDemo"></span>
                          </div>
 
-                    <button type="submit" class="btn btn-info w-100">Login</button>
+                    <button type="submit" class="btn btn-warning w-100">Login</button>
                 </form>
-            </div>
+                </div>
+                <h3>${name}</h3>
         </div>
-
     </div>
+                 <!-- JavaScript Functions -->
+                    <script>
+                        function onNameChange() {
+                            var name = document.getElementById('name').value;
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/name/" + name, true);
+                            xhttp.send();
+
+                            xhttp.onload=function(){
+                            document.getElementById("nameDemo").innerHTML=this.responseText;
+                            }
+                        }
+
+                        function onEmailChange() {
+                            var email = document.getElementById('email').value;
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/email/" + email, true);
+                            xhttp.send();
+
+                            xhttp.onload=function(){
+                            document.getElementById("emailDemo").innerHTML=this.responseText;
+                            }
+                        }
+                         function onPhoneChange() {
+                             var phone = document.getElementById('phone').value;
+                              var xhttp = new XMLHttpRequest();
+                              xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/phone/" + phone, true);
+                               xhttp.send();
+
+                               xhttp.onload=function(){
+                               document.getElementById("phoneDemo").innerHTML=this.responseText;
+                               }
+                          }
+
+                        function onAltEmailChange() {
+                            var alterEmail = document.getElementById('alterEmail').value;
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/alterEmail/" + alterEmail, true);
+                            xhttp.send();
+
+                            xhttp.onload=function(){
+                            document.getElementById("altEmailDemo").innerHTML=this.responseText;
+                            }
+                        }
+
+                         function onAltPhoneChange() {
+                            var alterPhone = document.getElementById('alterPhone').value;
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/alterPhone/" + alterPhone, true);
+                            xhttp.send();
+
+                            xhttp.onload=function(){
+                            document.getElementById("altPhoneDemo").innerHTML=this.responseText;
+                         }
+                         }
+
+                         function onLocationChange() {
+                           var location = document.getElementById('location').value;
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/location/" + location, true);
+                            xhttp.send();
+
+                            xhttp.onload=function(){
+                            document.getElementById("location").innerHTML=this.responseText;
+                            }
+                         }
+                      </script>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
 
 

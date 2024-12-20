@@ -26,7 +26,7 @@
                             <label for="password">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
-                        <button type="submit" class="btn btn-info btn-block">Login</button>
+                        <button type="submit" class="btn btn-warning btn-block">Login</button>
                     </form>
                 </div>
                 <div class="card-footer text-center">
