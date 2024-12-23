@@ -10,18 +10,17 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
-public class ModuleServiceImpl implements ModuleService{
+public class ModuleServiceImpl implements ModuleService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-     ModuleRepository repository;
+    private ModuleRepository repository;
 
     @Override
     public Long countName(String name) {
-        Long count= repository.countName(name);
-        return count;
+        return repository.countName(name);
     }
 
     @Override
@@ -47,18 +46,18 @@ public class ModuleServiceImpl implements ModuleService{
     @Override
     public Long countByLocation(String location) {
         return repository.countByLocation(location);
-
     }
 
     @Override
     public boolean onCommon(ModuleDTO dto) {
-        System.out.println("running onCommon in ModuleServiceImpl");
+        System.out.println("Running onCommon in ModuleServiceImpl");
 
-        if ( dto.getName() == null || dto.getPhone() == 0 || dto.getAlterPhone() == 0|| dto.getLocation() == null)
-        {
+        if (dto.getName() == null || dto.getPhone() == 0 || dto.getAlterPhone() == 0 || dto.getLocation() == null) {
             return false;
         }
-       String password = generateRandomPassword();
+        String password = generateRandomPassword();
+        String encodedPassword = passwordEncoder.encode(password); 
+
         ModuleEntity entity = new ModuleEntity();
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
@@ -67,30 +66,33 @@ public class ModuleServiceImpl implements ModuleService{
         entity.setAlterPhone(dto.getAlterPhone());
         entity.setLocation(dto.getLocation());
         entity.setPassword(password);
+        entity.setResetStatus(-1);
 
         try {
             repository.onModule(entity);
-            System.out.println("User details saved successfully: " +dto);
+            System.out.println("User details saved successfully: " + dto);
             return true;
         } catch (Exception e) {
             System.err.println("Error saving user details: " + e.getMessage());
             return false;
         }
-
-       // boolean saved = repository.onModule(entity);
-       // return true;
     }
 
     @Override
-    public String getName(String name, String password) {
-        System.out.println("getName method in ModuleServiceImpl");
-        ModuleEntity result = repository.getName(name);
-        if (result != null) {
-            if (passwordEncoder.matches(password, result.getPassword())) ;
-            System.out.println(result.getName());
-            return result.getName();
+    public ModuleEntity getName(String email, String password) {
+        ModuleEntity entity = repository.getName(email,password);
+        if (entity != null) {
+            if (entity.getPassword().equals(password)) {
+                System.out.println("Login successful for email: " + email);
+                return entity;
+            } else {
+                System.out.println("Invalid password for email: " + email);
+            }
+            return null;
+        } else {
+            System.out.println("No user with email: " + email);
         }
-        return "Data did not get";
+        return repository.getName(email,password);
     }
 
     private String generateRandomPassword() {
@@ -102,6 +104,25 @@ public class ModuleServiceImpl implements ModuleService{
             int randomIndex = random.nextInt(characters.length());
             password.append(characters.charAt(randomIndex));
         }
-            return password.toString();
+        return password.toString();
+    }
+
+    @Override
+    public boolean resetPassword(String email, String oldPassword, String newPassword) {
+        System.out.println("+++++++++++++++++++++++++++++"+email);
+        ModuleEntity entity = repository.findByEmail(email);
+        System.out.println("============================="+entity);
+        if (entity != null) {
+            if (entity.getPassword().equals(oldPassword)) {
+                String encryptedPassword = passwordEncoder.encode(newPassword);
+                entity.setPassword(encryptedPassword);
+                entity.setResetStatus(0);
+
+                return repository.update(entity);
+            }
         }
+        return false;
+    }
 }
+
+

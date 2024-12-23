@@ -1,12 +1,11 @@
 package com.xworkz.module.repository;
-
 import com.xworkz.module.entity.ModuleEntity;
 
 public interface ModuleRepository {
 
     boolean onModule(ModuleEntity moduleEntity);
 
-    ModuleEntity getName(String name);
+    ModuleEntity getName(String email,String password);
 
     Long countName(String name);
     Long countByEmail(String email);
@@ -15,7 +14,7 @@ public interface ModuleRepository {
     Long countByAltPhone(long alterPhone);
     Long countByLocation(String location);
 
-
-
+    boolean update(ModuleEntity entity);
+    ModuleEntity findByEmail(String email);
 
 }

@@ -25,7 +25,7 @@ public class ModuleRestController {
         Long count = this.service.countName(name);
         if (count == 0) {
             System.out.println("name does not exist");
-            return "doesnot existe";
+            return "does not existe";
         } else {
             System.out.println("name is exists");
             return "exist";
@@ -44,7 +44,6 @@ public class ModuleRestController {
             System.out.println("Email exists");
             return "email is exist";
         }
-
     }
 
     @GetMapping(value = "/alterEmail/{alterEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,7 +59,7 @@ public class ModuleRestController {
         }
     }
 
-    @GetMapping(value = "/phone/{phone}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/phone/{phoneNo}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String onPhone(@PathVariable long phone) {
         System.out.println("phone=" + phone);
         Long count = this.service.countByPhone(phone);
@@ -85,7 +84,6 @@ public class ModuleRestController {
             System.out.println("AltPhone is already exists");
             return "altPhone already exist";
         }
-
     }
 
     @GetMapping(value = "/location/{location}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,10 +96,9 @@ public class ModuleRestController {
 
         } else {
             System.out.println("location is already exists");
-
+            return "location exist";
         }
 
-
-        return location;
+        
     }
 }

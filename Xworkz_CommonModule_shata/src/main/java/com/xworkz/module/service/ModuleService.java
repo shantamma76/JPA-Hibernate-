@@ -1,12 +1,13 @@
 package com.xworkz.module.service;
 
 import com.xworkz.module.dto.ModuleDTO;
+import com.xworkz.module.entity.ModuleEntity;
 
 public interface ModuleService {
 
     boolean onCommon(ModuleDTO moduleDTO);
 
-    String getName(String name, String password);
+    ModuleEntity getName(String email, String password);
 
     Long countName(String name);
     Long countByEmail(String email);
@@ -15,5 +16,6 @@ public interface ModuleService {
     Long countByAltPhone(long alterPhone);
     Long countByLocation(String location);
 
+    boolean resetPassword(String email, String oldPassword, String newPassword);
 
 }

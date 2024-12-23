@@ -27,9 +27,9 @@ public class ModuleConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean localContEntMangFaBean(){
+    public LocalContainerEntityManagerFactoryBean localContEntMangFaBean() {
         LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
-        log.info("this is configuration");
+        log.info("this is hp laptop");
         bean.setPackagesToScan("com.xworkz.module.entity");
         bean.setDataSource(datasource());
         bean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());

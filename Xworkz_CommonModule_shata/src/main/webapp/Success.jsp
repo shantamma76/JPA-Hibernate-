@@ -8,7 +8,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-image: url('https://img.freepik.com/free-vector/abstract-geometric-wireframe-background_52683-59421.jpg?t=st=1734447885~exp=1734451485~hmac=f79025d1558a8b817a03c67c11eed60262c407ad7d6f5d8edbf3f95bdaea5389&w=996');
+
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -65,7 +65,7 @@
     <div class="container">
         <h1>Success!</h1>
         <p>Your operation was completed successfully.</p>
-        <a href="index.jsp" class="btn btn-primary">Go to Home</a>
+        <a href="index.jsp" class="btn btn-warning">Go to Home</a>
     </div>
 
     <!-- Bootstrap JS (Optional) -->

@@ -9,14 +9,15 @@ import javax.persistence.*;
 @Table(name="module_table")
 
 @NamedQuery(name="getNameByPassword", query = "SELECT c FROM ModuleEntity c WHERE c.name= :name")
-//@NamedQuery(name="getNameByEmailAndPassword" ,query="select e.name from UserEntity e where e.email= :byemail and e.password = :bypassword")
 
 @NamedQuery(name="countName" , query ="select count(*) from ModuleEntity e where e.name =:SetName")
-@NamedQuery(name = "countEmail", query = "select count(e) from ModuleEntity e where e.email = :SetEmail")
-@NamedQuery(name = "countAltEmail", query = "select count(e) from ModuleEntity e where e.alterEmail = :SetAlterEmail")
-@NamedQuery(name = "countPhone", query = "select count(e) from ModuleEntity e where e.phone = :SetPhone")
-@NamedQuery(name = "countAltPhone", query = "select count(e) from ModuleEntity e where e.alterPhone = :SetAlterPhone")
-@NamedQuery(name = "countLocation", query = "select count(e) from ModuleEntity e where e.location =:SetLocation")
+@NamedQuery(name = "countByEmail", query = "select count(e) from ModuleEntity e where e.email = :SetEmail")
+@NamedQuery(name = "countByAltEmail", query = "select count(e) from ModuleEntity e where e.alterEmail = :SetAlterEmail")
+@NamedQuery(name = "countByPhone", query = "select count(e) from ModuleEntity e where e.phone = :SetPhone")
+@NamedQuery(name = "countByAltPhone", query = "select count(e) from ModuleEntity e where e.alterPhone = :SetAlterPhone")
+@NamedQuery(name = "countByLocation", query = "select count(e) from ModuleEntity e where e.location =:SetLocation")
+
+@NamedQuery(name="findbyemail",query = "Select em from ModuleEntity em where em.email=:emailid ")
 
 public class ModuleEntity {
 
@@ -30,6 +31,9 @@ public class ModuleEntity {
     private long alterPhone;
     private String location;
     private String password;
+
+    @Column(name="reset_status")
+    private int resetStatus;
 
 }
 

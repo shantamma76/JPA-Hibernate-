@@ -41,15 +41,15 @@
                     </div>
 
                      <div class="mb-3">
-                          <label for="email" class="form-label">Alter Email</label>
-                          <input type="email" class="form-control" id="email" onChange="onAltEmailChange()" name="alterEmail"  placeholder="Enter Alter Email" required>
+                          <label for="alterEmail" class="form-label">Alter Email</label>
+                          <input type="emil" class="form-control" id="alterEmail" onChange="onAltEmailChange()" name="alterEmail"  placeholder="Enter Alter Email" required>
                      <span id="altEmailDemo"></span>
                      </div>
 
                         <div class="mb-3">
                               <label for="phoneNo" class="form-label">Alternate Phone Number</label>
-                              <input type="number" class="form-control" id="phoneNo" onChange="onAltPhoneChange()" name="alterPhone"  placeholder="Enter Alter Number" required>
-                            <span id="altPhoneDemo"></span>
+                              <input type="number" class="form-control" id="alterPhone" onChange="onAltPhoneChange()" name="alterPhone"  placeholder="Enter Alter Number" required>
+                            <span id="altPhoneNumberDemo"></span>
                          </div>
 
                         <div class="mb-3">
@@ -104,19 +104,21 @@
                             xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/alterEmail/" + alterEmail, true);
                             xhttp.send();
 
-                            xhttp.onload=function(){
-                            document.getElementById("altEmailDemo").innerHTML=this.responseText;
+                             xhttp.onload=function()
+                             {
+                             document.getElementById("altEmailDemo").innerHTML=this.responseText;
                             }
                         }
 
-                         function onAltPhoneChange() {
+                         function onAltPhoneChange()
+                         {
                             var alterPhone = document.getElementById('alterPhone').value;
                             var xhttp = new XMLHttpRequest();
                             xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/alterPhone/" + alterPhone, true);
                             xhttp.send();
 
                             xhttp.onload=function(){
-                            document.getElementById("altPhoneDemo").innerHTML=this.responseText;
+                            document.getElementById("altPhoneNumberDemo").innerHTML=this.responseText;
                          }
                          }
 
@@ -126,9 +128,10 @@
                             xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/location/" + location, true);
                             xhttp.send();
 
-                            xhttp.onload=function(){
-                            document.getElementById("location").innerHTML=this.responseText;
-                            }
+                               xhttp.onload=function()
+                               {
+                                document.getElementById("altPhoneDemo").innerHTML=this.responseText;
+                              }
                          }
                       </script>
 

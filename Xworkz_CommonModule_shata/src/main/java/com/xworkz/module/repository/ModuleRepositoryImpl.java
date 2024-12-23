@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import java.util.List;
 
 @Repository
 public class ModuleRepositoryImpl implements ModuleRepository{
@@ -39,18 +40,23 @@ public class ModuleRepositoryImpl implements ModuleRepository{
     }
 
     @Override
-    public ModuleEntity getName(String name) {
-        EntityManager em = emf.createEntityManager();
-        ModuleEntity entity = null;
-        try{
-            Query query = em.createNamedQuery("getNameByPassword");
-            query.setParameter("name",name);
-            entity= (ModuleEntity) query.getSingleResult();
+    public ModuleEntity getName(String email, String password) {
+        EntityManager entityManager = emf.createEntityManager();
+        try {
+            String queryStr = "SELECT p FROM ModuleEntity p WHERE p.email = :email";
+            Query query = entityManager.createQuery(queryStr);
+            query.setParameter("email", email);
+            List<ModuleEntity> result = query.getResultList();
 
-        } catch(Exception e){
-            em.close();
+            if (result != null && !result.isEmpty()) {
+                return result.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
         }
-        return entity;
+        return null;
     }
 
     @Override
@@ -87,7 +93,7 @@ public class ModuleRepositoryImpl implements ModuleRepository{
                     .setParameter("SetEmail", email)
                     .getSingleResult();
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error
+            e.printStackTrace();
         } finally {
             em.close();
         }
@@ -134,7 +140,7 @@ public class ModuleRepositoryImpl implements ModuleRepository{
         Long count = 0L;
         try {
             count = (Long) em.createNamedQuery("countByAltPhone")
-                    .setParameter("SetAltPhone", alterPhone)
+                    .setParameter("SetAlterPhone", alterPhone)
                     .getSingleResult();
         } catch (Exception e) {
             e.printStackTrace(); // Log the error
@@ -142,7 +148,6 @@ public class ModuleRepositoryImpl implements ModuleRepository{
             em.close();
         }
         return count;
-
     }
 
     @Override
@@ -161,5 +166,44 @@ public class ModuleRepositoryImpl implements ModuleRepository{
         return count;
     }
 
+    @Override
+    public boolean update(ModuleEntity entity) {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        try {
+            transaction.begin();
+            entityManager.merge(entity);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public ModuleEntity findByEmail(String email) {
+        EntityManager entityManager = emf.createEntityManager();
+        try {
+            Query query = entityManager.createNamedQuery("findbyemail");
+            query.setParameter("emailid", email);
+            Object singleResult =query.getSingleResult();
+            return (ModuleEntity) singleResult;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+        }
+
+    }
 }
 

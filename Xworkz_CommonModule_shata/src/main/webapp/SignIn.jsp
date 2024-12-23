@@ -8,6 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -28,6 +29,8 @@
                         </div>
                         <button type="submit" class="btn btn-warning btn-block">Login</button>
                     </form>
+                    <div class="reset-link">
+                    <a href="resetPassword.jsp" class="btn btn-link">Update your Password</a>
                 </div>
                 <div class="card-footer text-center">
                     <h3 class="text-danger">${msg}</h3>
