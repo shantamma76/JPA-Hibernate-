@@ -19,6 +19,9 @@ import javax.persistence.*;
 
 @NamedQuery(name="findbyemail",query = "Select em from ModuleEntity em where em.email=:emailid ")
 
+@NamedQuery(name="getAll", query="select ls from ModuleEntity ls where ls.email = :setEmail and ls.password = :setPassword")
+
+@NamedQuery(name= "getByEmail", query = "select ls from ModuleEntity ls where ls.email =: setEmail")
 public class ModuleEntity {
 
     @Id

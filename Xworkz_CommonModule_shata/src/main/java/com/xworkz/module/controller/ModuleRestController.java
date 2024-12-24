@@ -25,7 +25,7 @@ public class ModuleRestController {
         Long count = this.service.countName(name);
         if (count == 0) {
             System.out.println("name does not exist");
-            return "does not existe";
+            return "does not exist";
         } else {
             System.out.println("name is exists");
             return "exist";

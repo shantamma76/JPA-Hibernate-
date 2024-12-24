@@ -9,6 +9,7 @@
     <style>
         /* Custom styles */
         body {
+
             background-color: #f7f9fc;
             font-family: 'Arial', sans-serif;
         }

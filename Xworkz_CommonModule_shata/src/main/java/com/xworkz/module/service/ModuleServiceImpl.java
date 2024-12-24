@@ -4,13 +4,17 @@ import com.xworkz.module.dto.ModuleDTO;
 import com.xworkz.module.entity.ModuleEntity;
 import com.xworkz.module.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 @Service
 public class ModuleServiceImpl implements ModuleService {
+    private static final int MAX_ATTEMPTS = 3;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -67,6 +71,8 @@ public class ModuleServiceImpl implements ModuleService {
         entity.setLocation(dto.getLocation());
         entity.setPassword(password);
         entity.setResetStatus(-1);
+       //entity.setAttemptCount();
+       //entity.setLocked();
 
         try {
             repository.onModule(entity);
@@ -93,6 +99,15 @@ public class ModuleServiceImpl implements ModuleService {
             System.out.println("No user with email: " + email);
         }
         return repository.getName(email,password);
+    }
+
+    @Override
+    public List<ModuleEntity> getAll(String email, String password) {
+        List<ModuleEntity> list =repository.getAll(email,password);
+        if(list != null){
+            return list;
+        }
+        return null;
     }
 
     private String generateRandomPassword() {

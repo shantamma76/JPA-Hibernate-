@@ -3,13 +3,17 @@ package com.xworkz.module.controller;
 import com.xworkz.module.dto.ModuleDTO;
 import com.xworkz.module.entity.ModuleEntity;
 import com.xworkz.module.service.ModuleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/")
+@Slf4j
 public class ModuleController {
 
     @Autowired
@@ -32,14 +36,24 @@ public class ModuleController {
 
     @PostMapping("/signIn")
     public String onDisplay(@RequestParam String email, @RequestParam String password, Model model) {
-        ModuleEntity valid = service.getName(email,password);
+        log.info(email + " " +password);
+        List<ModuleEntity> list =service.getAll(email,password);
+        int resetStatus=0;
+        String name =null;
+        for(ModuleEntity data : list){
+            resetStatus = data.getResetStatus();
+            log.info("data.getCount()="+data.getResetStatus());
+            name = data.getName();
+        }
 
-        if (valid != null) {
-            model.addAttribute("msg", "Login successful!");
-            return "Success";
-        } else {
+
+        log.info("valid=="+resetStatus);
+        if(resetStatus == -1){
             model.addAttribute("msg", "Invalid name or password. Please try again.");
             return "resetPassword";
+        } else {
+            model.addAttribute("msg", "Login successful!");
+            return "Success";
         }
     }
 
@@ -55,5 +69,8 @@ public class ModuleController {
             return "resetPassword";
         }
     }
+
+
 }
+
 

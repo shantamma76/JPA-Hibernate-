@@ -8,7 +8,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-
+             background-image: url('https://static.vecteezy.com/system/resources/previews/001/340/791/original/pastel-rainbow-blurry-background-with-sparks-free-vector.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;

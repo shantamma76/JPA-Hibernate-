@@ -2,15 +2,17 @@ package com.xworkz.module.repository;
 
 import com.xworkz.module.entity.ModuleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
-public class ModuleRepositoryImpl implements ModuleRepository{
+public class ModuleRepositoryImpl implements ModuleRepository {
 
     @Autowired
     EntityManagerFactory emf;
@@ -21,19 +23,18 @@ public class ModuleRepositoryImpl implements ModuleRepository{
     @Override
     public boolean onModule(ModuleEntity entity) {
         System.out.println("running in repository implementation");
-        EntityManager em =emf.createEntityManager();
+        EntityManager em = emf.createEntityManager();
         EntityTransaction et = em.getTransaction();
         try {
             et.begin();
             em.persist(entity);
             et.commit();
-        } catch(Exception e){
-            if(et.isActive()){
+        } catch (Exception e) {
+            if (et.isActive()) {
                 et.rollback();
             }
             e.printStackTrace();
-        }
-         finally {
+        } finally {
             em.close();
         }
         return true;
@@ -58,6 +59,30 @@ public class ModuleRepositoryImpl implements ModuleRepository{
         }
         return null;
     }
+
+    @Override
+    public List<ModuleEntity> getAll(String email, String password) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
+
+        List<ModuleEntity> list = em.createNamedQuery("getAll").setParameter("setEmail", email).setParameter("setPassword", password).getResultList();
+
+        try {
+            et.begin();
+            et.commit();
+        } catch (Exception e) {
+            if (et.isActive()) {
+                em.close();
+            }
+        } finally {
+            em.close();
+        }
+        if (!list.isEmpty()) {
+            return list;
+        }
+        return null;
+    }
+
 
     @Override
     public Long countName(String name) {
@@ -205,5 +230,6 @@ public class ModuleRepositoryImpl implements ModuleRepository{
         }
 
     }
-}
 
+
+    }

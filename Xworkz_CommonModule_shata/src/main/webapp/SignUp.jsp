@@ -25,37 +25,37 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="name" onChange="onNameChange()" name="name" placeholder="Enter Name" required>
-                        <span  id="nameDemo"></span>
+                        <span  id="nameDemo" style="color:red;"></span>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" onChange="onEmailChange()" placeholder="Enter Email" required>
-                        <span id="emailDemo"></span>
+                        <span id="emailDemo" style="color:red;"></span>
                     </div>
 
                     <div class="mb-3">
                         <label for="phoneNo" class="form-label">Phone Number</label>
                         <input type="number" class="form-control" id="phoneNo" onChange="onPhoneChange()" name="phone"  placeholder="Enter Phone Number" pattern="[0-9]{10}" required>
-                        <span id="phoneDemo"></span>
+                        <span id="phoneDemo" style="color:red;"></span>
                     </div>
 
                      <div class="mb-3">
                           <label for="alterEmail" class="form-label">Alter Email</label>
                           <input type="emil" class="form-control" id="alterEmail" onChange="onAltEmailChange()" name="alterEmail"  placeholder="Enter Alter Email" required>
-                     <span id="altEmailDemo"></span>
+                     <span id="altEmailDemo" style="color:red;"></span>
                      </div>
 
                         <div class="mb-3">
                               <label for="phoneNo" class="form-label">Alternate Phone Number</label>
                               <input type="number" class="form-control" id="alterPhone" onChange="onAltPhoneChange()" name="alterPhone"  placeholder="Enter Alter Number" required>
-                            <span id="altPhoneNumberDemo"></span>
+                            <span id="altPhoneNumberDemo" style="color:red;"></span>
                          </div>
 
                         <div class="mb-3">
                         <label for="location" class="form-label">Location</label>
                                 <input type="text" class="form-control" id="location" onChange="onLocationChange()" name="location"  placeholder="Enter Location" required>
-                                <span id="locationDemo"></span>
+                                <span id="locationDemo" style="color:red;"></span>
                          </div>
 
                     <button type="submit" class="btn btn-warning w-100">Login</button>
