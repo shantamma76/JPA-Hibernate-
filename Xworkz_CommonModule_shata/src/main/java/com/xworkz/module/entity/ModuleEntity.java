@@ -17,11 +17,16 @@ import javax.persistence.*;
 @NamedQuery(name = "countByAltPhone", query = "select count(e) from ModuleEntity e where e.alterPhone = :SetAlterPhone")
 @NamedQuery(name = "countByLocation", query = "select count(e) from ModuleEntity e where e.location =:SetLocation")
 
-@NamedQuery(name="findbyemail",query = "Select em from ModuleEntity em where em.email=:emailid ")
-
+//@NamedQuery(name="findbyemail",query = "Select em from ModuleEntity em where em.email=:emailid ")
 @NamedQuery(name="getAll", query="select ls from ModuleEntity ls where ls.email = :setEmail and ls.password = :setPassword")
 
-@NamedQuery(name= "getByEmail", query = "select ls from ModuleEntity ls where ls.email =: setEmail")
+@NamedQuery(name="updatePasswordByEmail", query="update ModuleEntity ls set ls.password =:setNewPassword, ls.resetStatus =:setResetStatus where ls.email =:emailBy")
+@NamedQuery(name= "getAllByEmail", query = "select ls from ModuleEntity ls where ls.email =:byEmail")
+
+@NamedQuery(name = "updateCount", query="update ModuleEntity ls set ls.resetStatus =:setResetStatus where ls.email =: byEmail")
+@NamedQuery(name = "resetCount", query="update ModuleEntity ls set ls.resetStatus =: setResetStatus where ls.email =: byEmail")
+@NamedQuery(name = "getByEmailPassword", query="select ls from ModuleEntity ls where ls.email =: setEmail and ls.password =: setPassword")
+
 public class ModuleEntity {
 
     @Id

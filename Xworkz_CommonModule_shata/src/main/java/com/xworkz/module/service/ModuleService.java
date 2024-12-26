@@ -14,14 +14,23 @@ public interface ModuleService {
     List<ModuleEntity> getAll(String email, String password);
 
     Long countName(String name);
+
     Long countByEmail(String email);
+
     Long countByAltEmail(String alterEmail);
+
     Long countByPhone(long phone);
+
     Long countByAltPhone(long alterPhone);
+
     Long countByLocation(String location);
 
-    boolean resetPassword(String email, String oldPassword, String newPassword);
+    String resetPassword(String email, String oldPassword, String newPassword,String confirmPassword);
+    ModuleEntity getEmail(String email, String password);
 
-    //String login(String email, String password);
+    boolean saveEmail(String email, String password);  //for email sending
+
+
+
 
 }

@@ -30,7 +30,6 @@ public class ModuleRestController {
             System.out.println("name is exists");
             return "exist";
         }
-
     }
 
     @GetMapping(value = "/email/{email}", produces = MediaType.APPLICATION_JSON_VALUE)

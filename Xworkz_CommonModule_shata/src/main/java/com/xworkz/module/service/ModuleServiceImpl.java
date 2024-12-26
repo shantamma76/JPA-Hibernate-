@@ -1,20 +1,22 @@
 package com.xworkz.module.service;
-
 import com.xworkz.module.dto.ModuleDTO;
 import com.xworkz.module.entity.ModuleEntity;
 import com.xworkz.module.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
 @Service
 public class ModuleServiceImpl implements ModuleService {
-    private static final int MAX_ATTEMPTS = 3;
+   // private static final int MAX_ATTEMPTS = 3;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -60,7 +62,7 @@ public class ModuleServiceImpl implements ModuleService {
             return false;
         }
         String password = generateRandomPassword();
-        String encodedPassword = passwordEncoder.encode(password); 
+        String encodedPassword = passwordEncoder.encode(password);
 
         ModuleEntity entity = new ModuleEntity();
         entity.setName(dto.getName());
@@ -69,35 +71,27 @@ public class ModuleServiceImpl implements ModuleService {
         entity.setPhone(dto.getPhone());
         entity.setAlterPhone(dto.getAlterPhone());
         entity.setLocation(dto.getLocation());
-        entity.setPassword(password);
-        entity.setResetStatus(-1);
-       //entity.setAttemptCount();
-       //entity.setLocked();
+        //entity.setPassword(password);
+        //entity.setResetStatus(0);
 
-        try {
-            repository.onModule(entity);
-            System.out.println("User details saved successfully: " + dto);
+        int count = -1;
+        if(entity.getEmail() != null){
+            password = generateRandomPassword();
+            entity.setPassword(password);
+            entity.setResetStatus(count);
+        }
+        boolean saved = repository.onModule(entity);
+        if(saved) {
+            saveEmail(dto.getEmail(), password);
             return true;
-        } catch (Exception e) {
-            System.err.println("Error saving user details: " + e.getMessage());
+        } else {
             return false;
+
         }
     }
 
     @Override
     public ModuleEntity getName(String email, String password) {
-        ModuleEntity entity = repository.getName(email,password);
-        if (entity != null) {
-            if (entity.getPassword().equals(password)) {
-                System.out.println("Login successful for email: " + email);
-                return entity;
-            } else {
-                System.out.println("Invalid password for email: " + email);
-            }
-            return null;
-        } else {
-            System.out.println("No user with email: " + email);
-        }
         return repository.getName(email,password);
     }
 
@@ -123,21 +117,83 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public boolean resetPassword(String email, String oldPassword, String newPassword) {
-        System.out.println("+++++++++++++++++++++++++++++"+email);
-        ModuleEntity entity = repository.findByEmail(email);
-        System.out.println("============================="+entity);
-        if (entity != null) {
-            if (entity.getPassword().equals(oldPassword)) {
-                String encryptedPassword = passwordEncoder.encode(newPassword);
-                entity.setPassword(encryptedPassword);
-                entity.setResetStatus(0);
-
-                return repository.update(entity);
+    public String resetPassword(String email, String oldPassword, String newPassword, String confirmPassword) {
+        String msg = null;
+        ModuleEntity entity = repository.getByEmailPassword(email,oldPassword);
+        if(entity != null){
+            if(newPassword.equals(confirmPassword)) {
+                msg = repository.updatePasswordByEmail(newPassword, email);
+                return  msg;
             }
         }
+        return null;
+    }
+
+    @Override
+    public ModuleEntity getEmail(String email, String password) {
+        ModuleEntity entity = repository.getEmail(email);
+        if(entity!=null){
+            System.out.println(entity.toString());
+       if(password.equals(entity.getPassword()) && entity.getResetStatus() == -1){
+           System.out.println("matches");
+           return entity;
+       } else if(!(password.equals(entity.getPassword())) && (entity.getResetStatus() >= 0 && entity.getResetStatus() < 3)){
+           repository.updateCount(email, entity.getResetStatus());
+           System.out.println("password entered is wrong");
+           return null;
+       } else if (!(password.equals(entity.getPassword())) && entity.getResetStatus() == 3) {
+           System.out.println("locked");
+           return null;
+       } else if(password.equals(entity.getPassword()) && (entity.getResetStatus() < 3 && entity.getResetStatus() > -1)) {
+           boolean reset = repository.resetCount(email, entity.getResetStatus());
+           if(reset)
+               return entity;
+           else
+               return null;
+            }
+        }
+        return null;
+    }
+
+    //=========================email sending============================
+    @Override
+    public boolean saveEmail(String email, String password) {
+        System.out.println("this email ");
+        final String username = "siraganshantamma@gmail.com";
+        final String userPassword = "hhae fwza swyx wlyb";
+
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, userPassword);
+            }
+        });
+
+    try {
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(
+                Message.RecipientType.TO,
+                InternetAddress.parse(email)
+        );
+        message.setSubject("Your password");
+        message.setText("your password: " + password);
+
+        Transport.send(message);
+
+        System.out.println("Email sending is Done");
+
+    } catch(MessagingException e) {
+        e.printStackTrace();
+    }
         return false;
     }
-}
+   }
+
 
 

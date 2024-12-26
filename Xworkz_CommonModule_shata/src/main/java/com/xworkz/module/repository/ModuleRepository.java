@@ -1,7 +1,5 @@
 package com.xworkz.module.repository;
 import com.xworkz.module.entity.ModuleEntity;
-import org.springframework.security.core.userdetails.User;
-
 import java.util.List;
 
 public interface ModuleRepository {
@@ -18,9 +16,17 @@ public interface ModuleRepository {
     Long countByAltPhone(long alterPhone);
     Long countByLocation(String location);
 
-    boolean update(ModuleEntity entity);
-    ModuleEntity findByEmail(String email);
+    String updatePasswordByEmail(String newPassword, String email);
+    ModuleEntity findByName(String name);
+    ModuleEntity getEmail(String email);
 
-    //ModuleEntity getByEmail(String email);
+    boolean updatePasswordAndCount(String email, String confirmPassword, int count);
+    void updateCount(String email, int count);
+    boolean resetCount(String email, int count);
+
+    ModuleEntity getByEmailPassword(String email,String password);
 
 }
+
+
+

@@ -9,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/")
 @Slf4j
@@ -19,58 +17,61 @@ public class ModuleController {
     @Autowired
     private ModuleService service;
 
-    ModuleController(){
+    ModuleController() {
         System.out.println("running no-arg const in ModuleController");
     }
 
     @PostMapping("/signup")
     public String onPrinted(ModuleDTO dto) {
-        System.out.println("Sign up DTO :" +dto);
+        System.out.println("Sign up DTO :" + dto);
         boolean save = service.onCommon(dto);
-        if(save){
+        if (save) {
             return "Success";
         } else {
             return "SignUp";
         }
-   }
+    }
 
     @PostMapping("/signIn")
     public String onDisplay(@RequestParam String email, @RequestParam String password, Model model) {
-        log.info(email + " " +password);
-        List<ModuleEntity> list =service.getAll(email,password);
-        int resetStatus=0;
-        String name =null;
-        for(ModuleEntity data : list){
-            resetStatus = data.getResetStatus();
-            log.info("data.getCount()="+data.getResetStatus());
-            name = data.getName();
-        }
+        System.out.println(email + " " +password);
+        ModuleEntity user = service.getEmail(email,password);
 
+        if (user != null) {
+            int count = user.getResetStatus();
+            System.out.println(count);
 
-        log.info("valid=="+resetStatus);
-        if(resetStatus == -1){
-            model.addAttribute("msg", "Invalid name or password. Please try again.");
-            return "resetPassword";
-        } else {
-            model.addAttribute("msg", "Login successful!");
-            return "Success";
-        }
+            if (count == -1) {
+                String name = user.getName();
+                model.addAttribute("userName", name);
+                return "resetPassword";
+            } else {
+                return "Success";
+            }
+        } return "SignIn";
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestParam String email,@RequestParam String oldPassword,@RequestParam String newPassword,@RequestParam String confirmPassword) {
-        if (!newPassword.equals(confirmPassword)) {
-            return "resetPassword";
-        }
-        boolean isValid = service.resetPassword(email, oldPassword, newPassword);
-        if (isValid) {
-            return "SignIn";
+    public String resetPassword(@RequestParam String email,@RequestParam String oldPassword,
+                                @RequestParam String newPassword,@RequestParam String confirmPassword) {
+
+        log.info("email is==" + email);
+        log.info("email is==" + oldPassword);
+        log.info("new password==" + newPassword);
+        log.info("confirmPassword==" + confirmPassword);
+
+        String msg = service.resetPassword(email, oldPassword, newPassword, confirmPassword);
+
+        if ("password updated successsfully".equals(msg)) {
+            return "Success";
         } else {
-            return "resetPassword";
+            return "SignIn";
         }
+    }
     }
 
 
-}
+
+
 
 

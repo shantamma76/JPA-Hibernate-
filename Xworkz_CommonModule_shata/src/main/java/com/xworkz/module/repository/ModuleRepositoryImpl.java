@@ -2,13 +2,11 @@ package com.xworkz.module.repository;
 
 import com.xworkz.module.entity.ModuleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -16,9 +14,6 @@ public class ModuleRepositoryImpl implements ModuleRepository {
 
     @Autowired
     EntityManagerFactory emf;
-
-    @Autowired
-    private ModuleRepository repository;
 
     @Override
     public boolean onModule(ModuleEntity entity) {
@@ -86,22 +81,18 @@ public class ModuleRepositoryImpl implements ModuleRepository {
 
     @Override
     public Long countName(String name) {
-        EntityManager em=emf.createEntityManager();
-        EntityTransaction et=em.getTransaction();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
 
-        Long count= (Long)em.createNamedQuery("countName").setParameter("SetName",name).getSingleResult();
-        try{
+        Long count = (Long) em.createNamedQuery("countName").setParameter("SetName", name).getSingleResult();
+        try {
             et.begin();
             et.commit();
-        }
-        catch(Exception e)
-        {
-            if(et.isActive())
-            {
+        } catch (Exception e) {
+            if (et.isActive()) {
                 et.rollback();
             }
-        }
-        finally {
+        } finally {
             em.close();
 
         }
@@ -131,7 +122,7 @@ public class ModuleRepositoryImpl implements ModuleRepository {
         Long count = 0L;
         try {
             count = (Long) em.createNamedQuery("countByAltEmail")
-                    .setParameter("SetAltEmail", alterEmail)
+                    .setParameter("SetAlterEmail", alterEmail)
                     .getSingleResult();
         } catch (Exception e) {
             e.printStackTrace(); // Log the error
@@ -192,44 +183,185 @@ public class ModuleRepositoryImpl implements ModuleRepository {
     }
 
     @Override
-    public boolean update(ModuleEntity entity) {
-        EntityManager entityManager = emf.createEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
+    public String updatePasswordByEmail(String newPassword, String email) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
 
         try {
-            transaction.begin();
-            entityManager.merge(entity);
-            transaction.commit();
-            return true;
+            et.begin();
+            System.out.println("Email:" + email);
+            System.out.println("newPassword:" + newPassword);
+
+            Query query = em.createNamedQuery("updatePasswordByEmail");
+            query.setParameter("setNewPassword", newPassword);
+            query.setParameter("setResetStatus", 0);
+            query.setParameter("emailBy", email);
+
+            int value = query.executeUpdate();
+            et.commit();
+
+            if (value > 0) {
+                return "Password updated successfully";
+            } else {
+                return "Password is not updated";
+            }
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
+            if (et.isActive()) {
+                et.rollback();
             }
             e.printStackTrace();
-            return false;
+        } finally {
+            {
+                em.close();
+            }
+            return "An error occured while updating the password";
         }
-        finally {
-            entityManager.close();
+    }
+
+
+
+    @Override
+    public ModuleEntity findByName(String name) {
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            String queryStr = "SELECT ls FROM ModuleEntity ls WHERE ls.name =:name";
+            Query query = em.createQuery(queryStr);
+            query.setParameter("name", name);
+
+            List<ModuleEntity> result = query.getResultList();
+            if (!result.isEmpty()) {
+                return result.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        return null;
+    }
+
+    @Override
+    public void updateCount(String email, int count) {
+        int result = count + 1;
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
+
+        int value;
+        try {
+            et.begin();
+            value = em.createNamedQuery("updateCount")
+                    .setParameter("setResetStatus", result).setParameter("byEmail", email).executeUpdate();
+            et.commit();
+        } catch (Exception e) {
+            if (et.isActive()) {
+                et.rollback();
+            }
+        } finally {
+            em.close();
         }
     }
 
     @Override
-    public ModuleEntity findByEmail(String email) {
-        EntityManager entityManager = emf.createEntityManager();
+    public boolean resetCount(String email, int count) {
+        int result = 0;
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
+        int value = 0;
         try {
-            Query query = entityManager.createNamedQuery("findbyemail");
-            query.setParameter("emailid", email);
-            Object singleResult =query.getSingleResult();
-            return (ModuleEntity) singleResult;
+            et.begin();
+            value = em.createNamedQuery("resetCount").setParameter("setResetStatus", 0).setParameter("byEmail", email).executeUpdate();
+            et.commit();
+        } catch (Exception e) {
+            if (et.isActive()) {
+                et.rollback();
+            }
+        } finally {
+            em.close();
+        }
+        if (value > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public ModuleEntity getByEmailPassword(String email, String password) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
+        ModuleEntity entity = null;
+        try {
+            Query query = em.createNamedQuery("getByEmailPassword");
+            query.setParameter("setEmail", email).setParameter("setPassword", password);
+
+            entity = (ModuleEntity) query.getSingleResult();
+            System.out.println("Entity from repository" + entity.toString());
+        } catch(Exception e){
+            e.printStackTrace();
+            return null;
+        } finally {
+            em.close();
+        }
+        return entity;
+    }
+
+    @Override
+    public ModuleEntity getEmail(String email) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
+        ModuleEntity entity = null;
+        try {
+            Query query = em.createNamedQuery("getAllByEmail");
+            query.setParameter("byEmail", email);
+
+            entity = (ModuleEntity) query.getSingleResult();
+            System.out.println("Entity from repository :" + entity.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
-            entityManager.close();
+            em.close();
         }
-
+        return entity;
     }
 
+    @Override
+    public boolean updatePasswordAndCount(String email, String confirmPassword, int count) {
+        int loginValue = count + 1;
+        System.out.println(confirmPassword);
+        System.out.println(loginValue);
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction et = em.getTransaction();
 
+        boolean isUpdated = false;
+        try {
+            et.begin();
+            int value = em.createNamedQuery("updatePassword").setParameter("SetPassword", confirmPassword).setParameter("SetResetStatus", loginValue)
+                    .setParameter("ByEmail", email).executeUpdate();
+            if (value > 0) {
+                isUpdated = true;
+
+                System.out.println("Updated");
+            } else {
+                isUpdated = false;
+                System.out.println("Not Updated");
+            }
+            et.commit();
+        } catch (Exception e) {
+            if (et.isActive()) {
+                et.rollback();
+            }
+        } finally {
+            em.close();
+        }
+        if (isUpdated) {
+            System.out.println("updated");
+            return true;
+        } else {
+            System.out.println("not updated");
+            return false;
+        }
     }
+}
