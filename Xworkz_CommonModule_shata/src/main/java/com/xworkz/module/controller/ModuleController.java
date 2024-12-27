@@ -8,10 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import sun.security.pkcs11.Secmod;
+
+import javax.validation.ConstraintViolation;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
 @Slf4j
+
 public class ModuleController {
 
     @Autowired
@@ -22,14 +27,24 @@ public class ModuleController {
     }
 
     @PostMapping("/signup")
-    public String onPrinted(ModuleDTO dto) {
-        System.out.println("Sign up DTO :" + dto);
-        boolean save = service.onCommon(dto);
-        if (save) {
+    public String onPrinted(ModuleDTO dto, Model model) {
+        System.out.println("running onPrinted in controller");
+        System.out.println(dto);
+        Set<ConstraintViolation<ModuleDTO>> constaintViolations=service.onCommon(dto);
+        if(constaintViolations.isEmpty()) {
+            model.addAttribute("msg","SignUp Success");
             return "Success";
-        } else {
+        } else{
+            model.addAttribute("error", constaintViolations);
             return "SignUp";
         }
+
+//        boolean save = service.onCommon(dto);
+//        if (save) {
+//            return "Success";
+//        } else {
+//            return "SignUp";
+//        }
     }
 
     @PostMapping("/signIn")
@@ -68,7 +83,8 @@ public class ModuleController {
             return "SignIn";
         }
     }
-    }
+}
+
 
 
 

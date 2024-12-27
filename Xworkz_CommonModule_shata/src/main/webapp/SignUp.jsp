@@ -1,4 +1,5 @@
 <%@page isELIgnored = "false"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +22,11 @@
         <div class="card shadow-lg form-container">
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">Sign Up Form</h2>
+
+                <c:forEach items="${error}" var="i">
+                    <span style = "color:red">${i.message}</span>
+                </c:forEach>
+
                 <form action="signup" method="post">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>

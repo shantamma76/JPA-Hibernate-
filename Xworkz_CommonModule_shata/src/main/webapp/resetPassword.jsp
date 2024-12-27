@@ -22,6 +22,7 @@
   </style>
 </head>
 <body class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f0f0f0;">
+    <c:set var="userName" value="${userName"} />
 
   <div class="form-container p-4 border rounded shadow-sm bg-white">
     <h3 class="text-center mb-4">Reset Your Password</h3>

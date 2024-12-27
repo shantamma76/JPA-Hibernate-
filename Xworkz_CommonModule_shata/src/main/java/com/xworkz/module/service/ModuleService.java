@@ -3,11 +3,14 @@ package com.xworkz.module.service;
 import com.xworkz.module.dto.ModuleDTO;
 import com.xworkz.module.entity.ModuleEntity;
 
+import javax.validation.ConstraintViolation;
 import java.util.List;
+import java.util.Set;
 
 public interface ModuleService {
 
-    boolean onCommon(ModuleDTO moduleDTO);
+
+    Set<ConstraintViolation<ModuleDTO>> onCommon(ModuleDTO moduleDTO);
 
     ModuleEntity getName(String email, String password);
 

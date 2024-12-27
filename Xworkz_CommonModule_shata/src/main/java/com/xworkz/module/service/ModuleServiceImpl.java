@@ -10,9 +10,14 @@ import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 
 @Service
 public class ModuleServiceImpl implements ModuleService {
@@ -55,15 +60,16 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public boolean onCommon(ModuleDTO dto) {
+    public Set<ConstraintViolation<ModuleDTO>> onCommon(ModuleDTO dto) {
         System.out.println("Running onCommon in ModuleServiceImpl");
 
-        if (dto.getName() == null || dto.getPhone() == 0 || dto.getAlterPhone() == 0 || dto.getLocation() == null) {
-            return false;
-        }
-        String password = generateRandomPassword();
-        String encodedPassword = passwordEncoder.encode(password);
+//        if (dto.getName() == null || dto.getPhone() == 0 || dto.getAlterPhone() == 0 || dto.getLocation() == null) {
+//            return false;
+//        }
+//        String password = generateRandomPassword();
+//        String encodedPassword = passwordEncoder.encode(password);
 
+        String password = null;
         ModuleEntity entity = new ModuleEntity();
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
@@ -71,8 +77,6 @@ public class ModuleServiceImpl implements ModuleService {
         entity.setPhone(dto.getPhone());
         entity.setAlterPhone(dto.getAlterPhone());
         entity.setLocation(dto.getLocation());
-        //entity.setPassword(password);
-        //entity.setResetStatus(0);
 
         int count = -1;
         if(entity.getEmail() != null){
@@ -80,14 +84,23 @@ public class ModuleServiceImpl implements ModuleService {
             entity.setPassword(password);
             entity.setResetStatus(count);
         }
-        boolean saved = repository.onModule(entity);
-        if(saved) {
-            saveEmail(dto.getEmail(), password);
-            return true;
-        } else {
-            return false;
-
+//        boolean saved = repository.onModule(entity);
+//        if(saved) {
+//            saveEmail(dto.getEmail(), password);
+//            return true;
+//        } else {
+//            return false;
+//        }
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+        Validator validator = vf.getValidator();
+        Set<ConstraintViolation<ModuleDTO>> set = validator.validate(dto);
+        if(set.isEmpty()) {
+            boolean saved = repository.onModule(entity);
+            if(saved) {
+                saveEmail(dto.getEmail(), password);
+            }
         }
+        return set;
     }
 
     @Override
