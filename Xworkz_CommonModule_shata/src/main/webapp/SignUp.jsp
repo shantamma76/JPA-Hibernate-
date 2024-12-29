@@ -30,31 +30,31 @@
                 <form action="signup" method="post">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" onChange="onNameChange()" name="name" placeholder="Enter Name" required>
+                        <input type="text" class="form-control" id="name" onChange="onNameChange()" name="name" placeholder="Enter Name"  onblur="validData(event)">
                         <span  id="nameDemo" style="color:red;"></span>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" onChange="onEmailChange()" placeholder="Enter Email" required>
+                        <input type="email" class="form-control" id="email" name="email" onChange="onEmailChange()" placeholder="Enter Email" onblur="validData(event)" required>
                         <span id="emailDemo" style="color:red;"></span>
                     </div>
 
                     <div class="mb-3">
                         <label for="phoneNo" class="form-label">Phone Number</label>
-                        <input type="number" class="form-control" id="phoneNo" onChange="onPhoneChange()" name="phone"  placeholder="Enter Phone Number" pattern="[0-9]{10}" required>
+                        <input type="number" class="form-control" id="phoneNo" onChange="onPhoneChange()" name="phone"  placeholder="Enter Phone Number" pattern="[0-9]{10}" onblur="validData(event)" required>
                         <span id="phoneDemo" style="color:red;"></span>
                     </div>
 
                      <div class="mb-3">
                           <label for="alterEmail" class="form-label">Alter Email</label>
-                          <input type="emil" class="form-control" id="alterEmail" onChange="onAltEmailChange()" name="alterEmail"  placeholder="Enter Alter Email" required>
+                          <input type="emil" class="form-control" id="alterEmail" onChange="onAltEmailChange()" name="alterEmail"  placeholder="Enter Alter Email" onblur="validData(event)" required>
                      <span id="altEmailDemo" style="color:red;"></span>
                      </div>
 
                         <div class="mb-3">
                               <label for="phoneNo" class="form-label">Alternate Phone Number</label>
-                              <input type="number" class="form-control" id="alterPhone" onChange="onAltPhoneChange()" name="alterPhone"  placeholder="Enter Alter Number" required>
+                              <input type="number" class="form-control" id="alterPhone" onChange="onAltPhoneChange()" name="alterPhone"  placeholder="Enter Alter Number" onblur="validData(event)" required>
                             <span id="altPhoneNumberDemo" style="color:red;"></span>
                          </div>
 
@@ -72,8 +72,22 @@
     </div>
                  <!-- JavaScript Functions -->
                     <script>
+
+                    var emailvalue = "";
+                    var alternateemailvalue = "";
+                    var phoneNumbervalue = "";
+                    var alternatephonevalue = "";
+
                         function onNameChange() {
-                            var name = document.getElementById('name').value;
+                            var name = document.getElementById('name');
+                            var namevalue = name.value;
+
+                              if (namevalue.trim().length < 4)
+                              {
+                                document.getElementById("nameDemo").innerHTML = "Name must be at least 4 characters long.";
+                                return;
+                              }
+
                             var xhttp = new XMLHttpRequest();
                             xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/name/" + name, true);
                             xhttp.send();
@@ -81,10 +95,19 @@
                             xhttp.onload=function(){
                             document.getElementById("nameDemo").innerHTML=this.responseText;
                             }
-                        }
+                        };
 
                         function onEmailChange() {
-                            var email = document.getElementById('email').value;
+                            var email = document.getElementById('email');
+                            emailvalue = email.value;
+
+
+  if (!emailvalue.includes('@gmail.com') && !emailvalue.includes('@yahoo.com') && !emailvalue.includes('@outlook.com') && !emailvalue.includes('@hotmail.com') && !emailvalue.includes('.edu')
+      && !emailvalue.includes('.org') && !emailvalue.includes('.info') && !emailvalue.includes('.net'))
+      {
+    document.getElementById("emailDemo").innerHTML = "Enter a valid email address.";
+    return;
+  }
                             var xhttp = new XMLHttpRequest();
                             xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/email/" + email, true);
                             xhttp.send();
@@ -92,9 +115,19 @@
                             xhttp.onload=function(){
                             document.getElementById("emailDemo").innerHTML=this.responseText;
                             }
-                        }
+                        };
+
                          function onPhoneChange() {
-                             var phone = document.getElementById('phone').value;
+                             var phone = document.getElementById('phone');
+                              phoneNumbervalue = phone.value;
+
+                               if (phoneNumbervalue.trim().length !== 10 || (!phoneNumbervalue.startsWith("6") && !phoneNumbervalue.startsWith("7")
+                                && !phoneNumbervalue.startsWith("8") && !phoneNumbervalue.startsWith("9")))
+                                {
+                                  document.getElementById("phoneDemo").innerHTML = "Phone number must contain 10 digits and should be valid.";
+                                  return;
+                                }
+
                               var xhttp = new XMLHttpRequest();
                               xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/phone/" + phone, true);
                                xhttp.send();
@@ -102,10 +135,26 @@
                                xhttp.onload=function(){
                                document.getElementById("phoneDemo").innerHTML=this.responseText;
                                }
-                          }
+                          };
 
                         function onAltEmailChange() {
-                            var alterEmail = document.getElementById('alterEmail').value;
+                            var alterEmail = document.getElementById('alterEmail');
+                             alternateemailvalue = alterEmail.value;
+
+
+  if (!alternateemailvalue.includes('@gmail.com') && !alternateemailvalue.includes('@yahoo.com') && !alternateemailvalue.includes('@outlook.com')
+    && !alternateemailvalue.includes('@hotmail.com') && !alternateemailvalue.includes('.edu') && !alternateemailvalue.includes('.org') && !alternateemailvalue.includes('.info') && !alternateemailvalue.includes('.net'))
+    {
+    document.getElementById("altEmailDemo").innerHTML = "Enter a valid email address.";
+    return;
+  }
+
+  if (emailvalue === alternateemailvalue)
+  {
+    document.getElementById("altEmailDemo").innerHTML = "Email and Alternate Email should be different.";
+    return;
+  }
+
                             var xhttp = new XMLHttpRequest();
                             xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/alterEmail/" + alterEmail, true);
                             xhttp.send();
@@ -114,11 +163,24 @@
                              {
                              document.getElementById("altEmailDemo").innerHTML=this.responseText;
                             }
-                        }
+                        };
 
                          function onAltPhoneChange()
                          {
-                            var alterPhone = document.getElementById('alterPhone').value;
+                            var alterPhone = document.getElementById('alterPhone');
+                             alternatephonevalue = alterPhone.value;
+
+                              if (alternatephonevalue.trim().length !== 10 || (!alternatephonevalue.startsWith("6") && !alternatephonevalue.startsWith("7") && !alternatephonevalue.startsWith("8") && !alternatephonevalue.startsWith("9"))) {
+                                 document.getElementById("altPhoneNumberDemo").innerHTML = "Phone number must contain 10 digits and should be valid.";
+                                 return;
+                               }
+
+                               if (alternatephonevalue === phoneNumbervalue)
+                               {
+                                 document.getElementById("altPhoneNumberDemo").innerHTML = "Phone number and Alternate Phone number should be different";
+                                 return;
+                               }
+
                             var xhttp = new XMLHttpRequest();
                             xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_shata/alterPhone/" + alterPhone, true);
                             xhttp.send();
@@ -126,7 +188,7 @@
                             xhttp.onload=function(){
                             document.getElementById("altPhoneNumberDemo").innerHTML=this.responseText;
                          }
-                         }
+                         };
 
                          function onLocationChange() {
                            var location = document.getElementById('location').value;
