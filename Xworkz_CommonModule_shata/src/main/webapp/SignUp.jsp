@@ -36,25 +36,25 @@
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" onChange="onEmailChange()" placeholder="Enter Email" onblur="validData(event)" required>
+                        <input type="text" class="form-control" id="email" name="email" onChange="onEmailChange()" placeholder="Enter Email" onblur="validData(event)" required>
                         <span id="emailDemo" style="color:red;"></span>
                     </div>
 
                     <div class="mb-3">
                         <label for="phoneNo" class="form-label">Phone Number</label>
-                        <input type="number" class="form-control" id="phoneNo" onChange="onPhoneChange()" name="phone"  placeholder="Enter Phone Number" pattern="[0-9]{10}" onblur="validData(event)" required>
+                        <input type="text" class="form-control" id="phoneNo" onChange="onPhoneChange()" name="phone"  placeholder="Enter Phone Number" pattern="[0-9]{10}" onblur="validData(event)" required>
                         <span id="phoneDemo" style="color:red;"></span>
                     </div>
 
                      <div class="mb-3">
                           <label for="alterEmail" class="form-label">Alter Email</label>
-                          <input type="emil" class="form-control" id="alterEmail" onChange="onAltEmailChange()" name="alterEmail"  placeholder="Enter Alter Email" onblur="validData(event)" required>
+                          <input type="text" class="form-control" id="alterEmail" onChange="onAltEmailChange()" name="alterEmail"  placeholder="Enter Alter Email" onblur="validData(event)" required>
                      <span id="altEmailDemo" style="color:red;"></span>
                      </div>
 
                         <div class="mb-3">
                               <label for="phoneNo" class="form-label">Alternate Phone Number</label>
-                              <input type="number" class="form-control" id="alterPhone" onChange="onAltPhoneChange()" name="alterPhone"  placeholder="Enter Alter Number" onblur="validData(event)" required>
+                              <input type="text" class="form-control" id="alterPhone" onChange="onAltPhoneChange()" name="alterPhone"  placeholder="Enter Alter Number" onblur="validData(event)" required>
                             <span id="altPhoneNumberDemo" style="color:red;"></span>
                          </div>
 

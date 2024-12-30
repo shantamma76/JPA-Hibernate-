@@ -27,7 +27,7 @@ import javax.persistence.*;
 @NamedQuery(name = "resetCount", query="update ModuleEntity ls set ls.resetStatus =: setResetStatus where ls.email =: byEmail")
 @NamedQuery(name = "getByEmailPassword", query="select ls from ModuleEntity ls where ls.email =: setEmail and ls.password =: setPassword")
 
-public class ModuleEntity {
+public class ModuleEntity extends AbstractAuditEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

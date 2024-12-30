@@ -78,19 +78,19 @@ public class ModuleServiceImpl implements ModuleService {
         entity.setAlterPhone(dto.getAlterPhone());
         entity.setLocation(dto.getLocation());
 
+        entity.setCreatedBy(dto.getName());
+        entity.setUpdatedBy(dto.getName());
+        entity.getCreatedDate();
+        entity.getUpdatedDate();
+
+
         int count = -1;
         if(entity.getEmail() != null){
             password = generateRandomPassword();
             entity.setPassword(password);
             entity.setResetStatus(count);
         }
-//        boolean saved = repository.onModule(entity);
-//        if(saved) {
-//            saveEmail(dto.getEmail(), password);
-//            return true;
-//        } else {
-//            return false;
-//        }
+
         ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
         Validator validator = vf.getValidator();
         Set<ConstraintViolation<ModuleDTO>> set = validator.validate(dto);
@@ -169,6 +169,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     //=========================email sending============================
+
     @Override
     public boolean saveEmail(String email, String password) {
         System.out.println("this email ");
@@ -207,6 +208,8 @@ public class ModuleServiceImpl implements ModuleService {
         return false;
     }
    }
+
+
 
 
 
