@@ -99,11 +99,14 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="SignUp.jsp">Sign Up</a>
+                        <a class="nav-link" href="sup">Sign Up</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="SignIn.jsp">Sign In</a>
                     </li>
+
+
+
                 </ul>
             </div>
         </div>
@@ -114,7 +117,7 @@
         <div class="container">
             <h1>Welcome to Xworkz</h1>
             <p>Your journey to excellence starts here. Join us and experience the future.</p>
-            <a href="SignUp.jsp" class="btn btn-custom">Get Started</a>
+
         </div>
     </section>
 

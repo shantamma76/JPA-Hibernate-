@@ -29,11 +29,13 @@ public interface ModuleService {
     Long countByLocation(String location);
 
     String resetPassword(String email, String oldPassword, String newPassword,String confirmPassword);
+
     ModuleEntity getEmail(String email, String password);
 
     boolean saveEmail(String email, String password);  //for email sending
 
-
+    //public boolean updateprofile(ModuleDTO moduleDTO) ;
+    Set<ConstraintViolation<ModuleDTO>> updateDetails(String userName, ModuleDTO moduleDTO);
 
 
 }

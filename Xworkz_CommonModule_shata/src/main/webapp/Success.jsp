@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@page isELIgnored = "false"%>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -61,11 +62,15 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Success!</h1>
         <p>Your operation was completed successfully.</p>
-        <a href="index.jsp" class="btn btn-warning">Go to Home</a>
+        <a href="index.jsp" class="btn btn-warning">Go to Home</a> </br>
+
+        <form action="update" method="get">
+        <input type="text" name="name" value="${userName}"/>
+        <input type="submit" value="update signup">
+        </form>
     </div>
 
     <!-- Bootstrap JS (Optional) -->

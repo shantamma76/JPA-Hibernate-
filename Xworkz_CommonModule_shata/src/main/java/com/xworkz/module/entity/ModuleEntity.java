@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 @NamedQuery(name="getNameByPassword", query = "SELECT c FROM ModuleEntity c WHERE c.name= :name")
 
-@NamedQuery(name="countName" , query ="select count(*) from ModuleEntity e where e.name =:SetName")
+@NamedQuery(name="countName" , query ="select count(e) from ModuleEntity e where e.name =:SetName")
 @NamedQuery(name = "countByEmail", query = "select count(e) from ModuleEntity e where e.email = :SetEmail")
 @NamedQuery(name = "countByAltEmail", query = "select count(e) from ModuleEntity e where e.alterEmail = :SetAlterEmail")
 @NamedQuery(name = "countByPhone", query = "select count(e) from ModuleEntity e where e.phone = :SetPhone")
@@ -27,6 +27,9 @@ import javax.persistence.*;
 @NamedQuery(name = "resetCount", query="update ModuleEntity ls set ls.resetStatus =: setResetStatus where ls.email =: byEmail")
 @NamedQuery(name = "getByEmailPassword", query="select ls from ModuleEntity ls where ls.email =: setEmail and ls.password =: setPassword")
 
+//@NamedQuery(name = "getModuleEntityListByName", query = "SELECT p FROM ModuleEntity p WHERE p.name = :name")
+
+@NamedQuery(name="updatedDetailsByName", query = "update ModuleEntity p set p.email = :emailBy, p.phone = :phoneNumberBy, p.alterEmail = :alterEmailBy, p.alterPhone = :alternatePhoneNumberBy, p.location = :locationBy, p.updatedBy = :updateName, p.updatedDate =  :updatedOn where p.name = :nameBy")
 public class ModuleEntity extends AbstractAuditEntity{
 
     @Id

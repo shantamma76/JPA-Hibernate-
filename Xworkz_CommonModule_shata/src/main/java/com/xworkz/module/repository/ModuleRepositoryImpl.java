@@ -1,5 +1,6 @@
 package com.xworkz.module.repository;
 
+import com.xworkz.module.dto.ModuleDTO;
 import com.xworkz.module.entity.ModuleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -7,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -29,7 +31,8 @@ public class ModuleRepositoryImpl implements ModuleRepository {
                 et.rollback();
             }
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             em.close();
         }
         return true;
@@ -218,8 +221,6 @@ public class ModuleRepositoryImpl implements ModuleRepository {
         }
     }
 
-
-
     @Override
     public ModuleEntity findByName(String name) {
         EntityManager em = emf.createEntityManager();
@@ -306,6 +307,9 @@ public class ModuleRepositoryImpl implements ModuleRepository {
         return entity;
     }
 
+
+
+
     @Override
     public ModuleEntity getEmail(String email) {
         EntityManager em = emf.createEntityManager();
@@ -364,4 +368,69 @@ public class ModuleRepositoryImpl implements ModuleRepository {
             return false;
         }
     }
-}
+
+    @Override
+    public boolean updateDetails(String userName, ModuleDTO moduleDTO) {
+        System.out.println("repository:"+moduleDTO.toString());
+        System.out.println(userName);
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        boolean isUpdated = false;
+
+        try {
+            entityTransaction.begin();
+            int value = (entityManager.createNamedQuery("updatedDetailsByName").setParameter("emailBy", moduleDTO.getEmail()).setParameter("phoneNumberBy", moduleDTO.getPhone())
+                    .setParameter("alterEmailBy", moduleDTO.getAlterEmail()).setParameter("alternatePhoneNumberBy", moduleDTO.getAlterPhone())
+                    .setParameter("locationBy", moduleDTO.getLocation()).setParameter("updateName",moduleDTO.getName()).setParameter("updatedOn",LocalDateTime.now()).setParameter("nameBy", userName)).executeUpdate();
+
+            if (value > 0) {
+                isUpdated = true;
+                System.out.println("updated");
+            } else {
+                isUpdated = false;
+                System.out.println("Not updated");
+            }
+            entityTransaction.commit();
+
+        } catch (Exception e) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+        }
+            finally {
+                entityManager.close();
+            }
+            if (isUpdated) {
+                System.out.println("updated");
+                return true;
+            } else {
+                System.out.println("it is not updated");
+                return false;
+            }
+        }
+    }
+
+//    @Override
+//    public ModuleEntity getByName(String name) {
+//        EntityManager entityManager = emf.createEntityManager();
+//        try {
+//
+//            Query query = entityManager.createNamedQuery("getModuleEntityListByName");
+//            query.setParameter("name", name);
+//
+//            List<ModuleEntity> result = query.getResultList();
+//            if (!result.isEmpty()) {
+//                return result.get(0);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//
+//            entityManager.close();
+//        }
+//        return null;
+//    }
+
+
+

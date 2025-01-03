@@ -27,7 +27,7 @@ public class ModuleConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean localContEntMangFaBean() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
         log.info("this is hp laptop");
         bean.setPackagesToScan("com.xworkz.module.entity");
@@ -36,15 +36,6 @@ public class ModuleConfiguration {
         return bean;
     }
 
-    @Bean
-    public ViewResolver onView(){
-        return new InternalResourceViewResolver("/",".jsp");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public DataSource datasource(){
@@ -54,6 +45,15 @@ public class ModuleConfiguration {
         dataSource.setUsername("root");
         dataSource.setPassword("Xworkzodc@123");
         return dataSource;
+    }
+    @Bean
+    public ViewResolver onView(){
+        return new InternalResourceViewResolver("/",".jsp");
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
 }

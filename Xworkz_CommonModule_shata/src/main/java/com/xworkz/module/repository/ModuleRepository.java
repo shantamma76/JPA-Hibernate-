@@ -1,4 +1,5 @@
 package com.xworkz.module.repository;
+import com.xworkz.module.dto.ModuleDTO;
 import com.xworkz.module.entity.ModuleEntity;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public interface ModuleRepository {
 
     ModuleEntity getByEmailPassword(String email,String password);
 
+   // public ModuleEntity getByName(String name) ;
+    boolean updateDetails(String userName, ModuleDTO moduleDTO);
 }
 
 

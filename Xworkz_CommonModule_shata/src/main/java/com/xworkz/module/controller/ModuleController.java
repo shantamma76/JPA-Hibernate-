@@ -1,5 +1,6 @@
 package com.xworkz.module.controller;
 
+import com.xworkz.module.constant.LocationEnum;
 import com.xworkz.module.dto.ModuleDTO;
 import com.xworkz.module.entity.ModuleEntity;
 import com.xworkz.module.service.ModuleService;
@@ -8,86 +9,103 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import sun.security.pkcs11.Secmod;
 
 import javax.validation.ConstraintViolation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @Controller
 @RequestMapping("/")
 @Slf4j
-
 public class ModuleController {
 
     @Autowired
     private ModuleService service;
 
+    private List<LocationEnum> listoflocation = new ArrayList<>(Arrays.asList(LocationEnum.values()));
+
     ModuleController() {
-        System.out.println("running no-arg const in ModuleController");
+        System.out.println("Running no-arg constructor in ModuleController");
+    }
+
+    @GetMapping("/sup")
+    public String onSignup(Model model) {
+        listoflocation.forEach(n -> System.out.println(n));
+        model.addAttribute("listoflocation", listoflocation);
+        return "SignUp";
+    }
+
+    @GetMapping("/update")
+    public String onUpdate(@RequestParam(required = false) String name, Model model) {
+        listoflocation.forEach(n -> System.out.println(n));
+        model.addAttribute("listoflocation", listoflocation);
+        model.addAttribute("userName", name);
+        return "NewSignup";
     }
 
     @PostMapping("/signup")
     public String onPrinted(ModuleDTO dto, Model model) {
-        System.out.println("running onPrinted in controller");
+        System.out.println("Running onPrinted in controller");
         System.out.println(dto);
-        Set<ConstraintViolation<ModuleDTO>> constaintViolations=service.onCommon(dto);
-        if(constaintViolations.isEmpty()) {
-            model.addAttribute("msg","SignUp Success");
+
+        Set<ConstraintViolation<ModuleDTO>> constraintViolations = service.onCommon(dto);
+        if (constraintViolations.isEmpty()) {
+            model.addAttribute("msg", "SignUp Success");
             return "Success";
-        } else{
-            model.addAttribute("error", constaintViolations);
+        } else {
+            model.addAttribute("error", constraintViolations);
             return "SignUp";
         }
-
-//        boolean save = service.onCommon(dto);
-//        if (save) {
-//            return "Success";
-//        } else {
-//            return "SignUp";
-//        }
     }
 
     @PostMapping("/signIn")
     public String onDisplay(@RequestParam String email, @RequestParam String password, Model model) {
-        System.out.println(email + " " +password);
-        ModuleEntity user = service.getEmail(email,password);
+        System.out.println(email + " " + password);
+        ModuleEntity entity = service.getEmail(email, password);
 
-        if (user != null) {
-            int count = user.getResetStatus();
-            System.out.println(count);
+        if (entity != null) {
+            int loginCount = entity.getResetStatus();
+            String userName = entity.getName();
 
-            if (count == -1) {
-                String name = user.getName();
-                model.addAttribute("userName", name);
+            if (loginCount == -1) {
+                model.addAttribute("userName", userName);
                 return "resetPassword";
             } else {
+                model.addAttribute("userName", userName);
                 return "Success";
             }
-        } return "SignIn";
+        }
+        return "SignIn";
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestParam String email,@RequestParam String oldPassword,
-                                @RequestParam String newPassword,@RequestParam String confirmPassword) {
-
-        log.info("email is==" + email);
-        log.info("email is==" + oldPassword);
-        log.info("new password==" + newPassword);
-        log.info("confirmPassword==" + confirmPassword);
+    public String resetPassword(@RequestParam String email, @RequestParam String oldPassword,
+                                @RequestParam String newPassword, @RequestParam String confirmPassword) {
+        log.info("Email is: " + email);
+        log.info("Old password: " + oldPassword);
+        log.info("New password: " + newPassword);
+        log.info("Confirm password: " + confirmPassword);
 
         String msg = service.resetPassword(email, oldPassword, newPassword, confirmPassword);
 
-        if ("password updated successsfully".equals(msg)) {
+        if ("password updated successfully".equals(msg)) {
             return "Success";
         } else {
             return "SignIn";
         }
     }
+
+    @PostMapping("/newSignup")
+    public String newUpdated(@RequestParam String name, ModuleDTO dto, Model model) {
+        //System.out.println(name);
+        Set<ConstraintViolation<ModuleDTO>> set = service.updateDetails(name, dto);
+         set.forEach((n)-> System.out.println(n));
+        if (set.isEmpty()) {
+            model.addAttribute("userName",name);
+            return "Success";
+        }
+        return "NewSignup";
+    }
 }
-
-
-
-
-
-
-

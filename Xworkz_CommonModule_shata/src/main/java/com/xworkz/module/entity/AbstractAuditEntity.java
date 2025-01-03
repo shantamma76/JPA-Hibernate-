@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Data
+
 public class AbstractAuditEntity implements Serializable {
 
     private String createdBy;

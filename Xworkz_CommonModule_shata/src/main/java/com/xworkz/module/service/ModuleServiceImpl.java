@@ -14,14 +14,12 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class ModuleServiceImpl implements ModuleService {
-   // private static final int MAX_ATTEMPTS = 3;
+    // private static final int MAX_ATTEMPTS = 3;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -85,7 +83,7 @@ public class ModuleServiceImpl implements ModuleService {
 
 
         int count = -1;
-        if(entity.getEmail() != null){
+        if (entity.getEmail() != null) {
             password = generateRandomPassword();
             entity.setPassword(password);
             entity.setResetStatus(count);
@@ -94,9 +92,9 @@ public class ModuleServiceImpl implements ModuleService {
         ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
         Validator validator = vf.getValidator();
         Set<ConstraintViolation<ModuleDTO>> set = validator.validate(dto);
-        if(set.isEmpty()) {
+        if (set.isEmpty()) {
             boolean saved = repository.onModule(entity);
-            if(saved) {
+            if (saved) {
                 saveEmail(dto.getEmail(), password);
             }
         }
@@ -105,13 +103,13 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public ModuleEntity getName(String email, String password) {
-        return repository.getName(email,password);
+        return repository.getName(email, password);
     }
 
     @Override
     public List<ModuleEntity> getAll(String email, String password) {
-        List<ModuleEntity> list =repository.getAll(email,password);
-        if(list != null){
+        List<ModuleEntity> list = repository.getAll(email, password);
+        if (list != null) {
             return list;
         }
         return null;
@@ -132,11 +130,11 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public String resetPassword(String email, String oldPassword, String newPassword, String confirmPassword) {
         String msg = null;
-        ModuleEntity entity = repository.getByEmailPassword(email,oldPassword);
-        if(entity != null){
-            if(newPassword.equals(confirmPassword)) {
+        ModuleEntity entity = repository.getByEmailPassword(email, oldPassword);
+        if (entity != null) {
+            if (newPassword.equals(confirmPassword)) {
                 msg = repository.updatePasswordByEmail(newPassword, email);
-                return  msg;
+                return msg;
             }
         }
         return null;
@@ -145,24 +143,24 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public ModuleEntity getEmail(String email, String password) {
         ModuleEntity entity = repository.getEmail(email);
-        if(entity!=null){
+        if (entity != null) {
             System.out.println(entity.toString());
-       if(password.equals(entity.getPassword()) && entity.getResetStatus() == -1){
-           System.out.println("matches");
-           return entity;
-       } else if(!(password.equals(entity.getPassword())) && (entity.getResetStatus() >= 0 && entity.getResetStatus() < 3)){
-           repository.updateCount(email, entity.getResetStatus());
-           System.out.println("password entered is wrong");
-           return null;
-       } else if (!(password.equals(entity.getPassword())) && entity.getResetStatus() == 3) {
-           System.out.println("locked");
-           return null;
-       } else if(password.equals(entity.getPassword()) && (entity.getResetStatus() < 3 && entity.getResetStatus() > -1)) {
-           boolean reset = repository.resetCount(email, entity.getResetStatus());
-           if(reset)
-               return entity;
-           else
-               return null;
+            if (password.equals(entity.getPassword()) && entity.getResetStatus() == -1) {
+                System.out.println("matches");
+                return entity;
+            } else if (!(password.equals(entity.getPassword())) && (entity.getResetStatus() >= 0 && entity.getResetStatus() < 3)) {
+                repository.updateCount(email, entity.getResetStatus());
+                System.out.println("password entered is wrong");
+                return null;
+            } else if (!(password.equals(entity.getPassword())) && entity.getResetStatus() == 3) {
+                System.out.println("locked");
+                return null;
+            } else if (password.equals(entity.getPassword()) && (entity.getResetStatus() < 3 && entity.getResetStatus() > -1)) {
+                boolean reset = repository.resetCount(email, entity.getResetStatus());
+                if (reset)
+                    return entity;
+                else
+                    return null;
             }
         }
         return null;
@@ -188,26 +186,68 @@ public class ModuleServiceImpl implements ModuleService {
             }
         });
 
-    try {
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(username));
-        message.setRecipients(
-                Message.RecipientType.TO,
-                InternetAddress.parse(email)
-        );
-        message.setSubject("Your password");
-        message.setText("your password: " + password);
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(email)
+            );
+            message.setSubject("Your password");
+            message.setText("your password: " + password);
 
-        Transport.send(message);
+            Transport.send(message);
 
-        System.out.println("Email sending is Done");
+            System.out.println("Email sending is Done");
 
-    } catch(MessagingException e) {
-        e.printStackTrace();
-    }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         return false;
     }
-   }
+
+    @Override
+    public Set<ConstraintViolation<ModuleDTO>> updateDetails(String userName, ModuleDTO moduleDTO) {
+        if (moduleDTO != null) {
+            moduleDTO.setName(userName);
+            System.out.println("service:"+moduleDTO.toString());
+            ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+            Validator validator = vf.getValidator();
+            Set<ConstraintViolation<ModuleDTO>> set = validator.validate(moduleDTO);
+
+            if (set.isEmpty()) {
+                System.out.println("------------------");
+                boolean updated = repository.updateDetails(userName, moduleDTO);
+            }
+            return set;
+        }
+        return null;
+    }
+}
+
+
+//    @Override
+//    public boolean updateprofile(ModuleDTO moduleDTO) {
+//        ModuleEntity entity = repository.findByName(moduleDTO.getName());
+//
+//        if (entity != null) {
+//            entity.setName(moduleDTO.getName());
+//            entity.setEmail(moduleDTO.getEmail());
+//            entity.setPhone(moduleDTO.getPhone());
+//            entity.setAlterEmail(moduleDTO.getAlterEmail());
+//            entity.setAlterPhone(moduleDTO.getAlterPhone());
+//            entity.setLocation(moduleDTO.getLocation());
+//            entity.setUpdatedBy(moduleDTO.getName());
+//            entity.setUpdatedDate(LocalDateTime.now());
+//            return repository.onModule(entity);
+//        }
+//
+//        return false;
+//    }
+
+
+
+
 
 
 
