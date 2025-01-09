@@ -28,7 +28,7 @@ public interface ModuleRepository {
     ModuleEntity getByEmailPassword(String email,String password);
 
    // public ModuleEntity getByName(String name) ;
-    boolean updateDetails(String userName, ModuleDTO moduleDTO);
+    boolean updateDetails(String userName, ModuleDTO moduleDTO,String filePath);
 }
 
 

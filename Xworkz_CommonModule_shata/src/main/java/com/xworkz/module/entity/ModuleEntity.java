@@ -17,9 +17,7 @@ import javax.persistence.*;
 @NamedQuery(name = "countByAltPhone", query = "select count(e) from ModuleEntity e where e.alterPhone = :SetAlterPhone")
 @NamedQuery(name = "countByLocation", query = "select count(e) from ModuleEntity e where e.location =:SetLocation")
 
-//@NamedQuery(name="findbyemail",query = "Select em from ModuleEntity em where em.email=:emailid ")
 @NamedQuery(name="getAll", query="select ls from ModuleEntity ls where ls.email = :setEmail and ls.password = :setPassword")
-
 @NamedQuery(name="updatePasswordByEmail", query="update ModuleEntity ls set ls.password =:setNewPassword, ls.resetStatus =:setResetStatus where ls.email =:emailBy")
 @NamedQuery(name= "getAllByEmail", query = "select ls from ModuleEntity ls where ls.email =:byEmail")
 
@@ -27,9 +25,7 @@ import javax.persistence.*;
 @NamedQuery(name = "resetCount", query="update ModuleEntity ls set ls.resetStatus =: setResetStatus where ls.email =: byEmail")
 @NamedQuery(name = "getByEmailPassword", query="select ls from ModuleEntity ls where ls.email =: setEmail and ls.password =: setPassword")
 
-//@NamedQuery(name = "getModuleEntityListByName", query = "SELECT p FROM ModuleEntity p WHERE p.name = :name")
-
-@NamedQuery(name="updatedDetailsByName", query = "update ModuleEntity p set p.email = :emailBy, p.phone = :phoneNumberBy, p.alterEmail = :alterEmailBy, p.alterPhone = :alternatePhoneNumberBy, p.location = :locationBy, p.updatedBy = :updateName, p.updatedDate =  :updatedOn where p.name = :nameBy")
+@NamedQuery(name="updatedDetailsByName", query = "update ModuleEntity p set p.email = :emailBy, p.phone = :phoneNumberBy, p.alterEmail = :alterEmailBy, p.alterPhone = :alternatePhoneNumberBy, p.location = :locationBy, p.updatedBy = :updateName, p.updatedDate =  :updatedOn,p.filePath= :filePathBy where p.name = :nameBy")
 public class ModuleEntity extends AbstractAuditEntity{
 
     @Id
@@ -45,7 +41,6 @@ public class ModuleEntity extends AbstractAuditEntity{
 
     @Column(name="reset_status")
     private int resetStatus;
-
 }
 
 

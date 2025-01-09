@@ -308,8 +308,6 @@ public class ModuleRepositoryImpl implements ModuleRepository {
     }
 
 
-
-
     @Override
     public ModuleEntity getEmail(String email) {
         EntityManager em = emf.createEntityManager();
@@ -319,10 +317,18 @@ public class ModuleRepositoryImpl implements ModuleRepository {
             Query query = em.createNamedQuery("getAllByEmail");
             query.setParameter("byEmail", email);
 
-            entity = (ModuleEntity) query.getSingleResult();
-            System.out.println("Entity from repository :" + entity.toString());
+            List<ModuleEntity> result = query.getResultList();
 
-        } catch (Exception e) {
+            if (!result.isEmpty()) {
+                entity = result.get(0);  // You can select the first or handle according to your logic
+                System.out.println("Entity from repository: " + entity);
+
+//            entity = (ModuleEntity) query.getSingleResult();
+//           entity = (ModuleEntity) query.getResultList();
+//            System.out.println("Entity from repository :" + entity.toString());
+
+            }
+        }catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
@@ -370,7 +376,7 @@ public class ModuleRepositoryImpl implements ModuleRepository {
     }
 
     @Override
-    public boolean updateDetails(String userName, ModuleDTO moduleDTO) {
+    public boolean updateDetails(String userName, ModuleDTO moduleDTO,String filePath) {
         System.out.println("repository:"+moduleDTO.toString());
         System.out.println(userName);
         EntityManager entityManager = emf.createEntityManager();
@@ -382,7 +388,7 @@ public class ModuleRepositoryImpl implements ModuleRepository {
             entityTransaction.begin();
             int value = (entityManager.createNamedQuery("updatedDetailsByName").setParameter("emailBy", moduleDTO.getEmail()).setParameter("phoneNumberBy", moduleDTO.getPhone())
                     .setParameter("alterEmailBy", moduleDTO.getAlterEmail()).setParameter("alternatePhoneNumberBy", moduleDTO.getAlterPhone())
-                    .setParameter("locationBy", moduleDTO.getLocation()).setParameter("updateName",moduleDTO.getName()).setParameter("updatedOn",LocalDateTime.now()).setParameter("nameBy", userName)).executeUpdate();
+                    .setParameter("locationBy", moduleDTO.getLocation()).setParameter("updateName",moduleDTO.getName()).setParameter("filePathBy",filePath).setParameter("updatedOn",LocalDateTime.now()).setParameter("nameBy", userName)).executeUpdate();
 
             if (value > 0) {
                 isUpdated = true;

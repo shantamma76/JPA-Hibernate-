@@ -35,7 +35,9 @@ public interface ModuleService {
     boolean saveEmail(String email, String password);  //for email sending
 
     //public boolean updateprofile(ModuleDTO moduleDTO) ;
-    Set<ConstraintViolation<ModuleDTO>> updateDetails(String userName, ModuleDTO moduleDTO);
+    Set<ConstraintViolation<ModuleDTO>> updateDetails(String userName, ModuleDTO moduleDTO,String filePath);
+
+    String resetPasswordByEmail(String email,String newPassword,String confirmPassword);
 
 
 }

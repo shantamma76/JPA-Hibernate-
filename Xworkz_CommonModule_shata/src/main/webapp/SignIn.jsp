@@ -31,6 +31,7 @@
                     </form>
                     <div class="reset-link">
                     <a href="resetPassword.jsp" class="btn btn-link">Update your Password</a>
+                    <a href="forgetPassword.jsp" class="btn btn-link">Forget Password</a>
                 </div>
                 <div class="card-footer text-center">
                     <h3 class="text-danger">${msg}</h3>

@@ -5,12 +5,24 @@ import com.xworkz.module.dto.ModuleDTO;
 import com.xworkz.module.entity.ModuleEntity;
 import com.xworkz.module.service.ModuleService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import sun.nio.ch.IOUtil;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +54,7 @@ public class ModuleController {
         listoflocation.forEach(n -> System.out.println(n));
         model.addAttribute("listoflocation", listoflocation);
         model.addAttribute("userName", name);
-        return "NewSignup";
+        return "UpdateProfile";
     }
 
     @PostMapping("/signup")
@@ -74,6 +86,7 @@ public class ModuleController {
                 return "resetPassword";
             } else {
                 model.addAttribute("userName", userName);
+                model.addAttribute("filePath", entity.getFilePath());
                 return "Success";
             }
         }
@@ -97,15 +110,66 @@ public class ModuleController {
         }
     }
 
-    @PostMapping("/newSignup")
-    public String newUpdated(@RequestParam String name, ModuleDTO dto, Model model) {
+    @PostMapping("/update")
+    public String newUpdated(@RequestParam String name, ModuleDTO dto, @RequestParam("picture") MultipartFile multipartFile, Model model)throws  Exception {
         //System.out.println(name);
-        Set<ConstraintViolation<ModuleDTO>> set = service.updateDetails(name, dto);
-         set.forEach((n)-> System.out.println(n));
-        if (set.isEmpty()) {
-            model.addAttribute("userName",name);
-            return "Success";
+        if(multipartFile.isEmpty()) {
+            Set<ConstraintViolation<ModuleDTO>> set = service.updateDetails(name, dto,null);
+            set.forEach((n) -> System.out.println(n));
+            if (set.isEmpty()) {
+                model.addAttribute("userName", name);
+                return "Success";
+            }
         }
-        return "NewSignup";
+        else{
+            System.out.println("multipartFile="+multipartFile);
+            System.out.println("multipartFile OriginalFileName=="+multipartFile.getOriginalFilename());
+            System.out.println("multipartFile=="+multipartFile.getContentType());
+
+            byte[] bytes = multipartFile.getBytes();
+            Path path = Paths.get("C:\\fileUpload\\" + name + System.currentTimeMillis() + ".jpg");
+            Files.write(path, bytes);
+            String filePath = path.getFileName().toString();
+            System.err.println("filePath=====" + filePath);
+
+            Set<ConstraintViolation<ModuleDTO>> set = service.updateDetails(name, dto,filePath);
+            if(set.isEmpty()){
+                return "Success";
+            }
+        }
+        return "UpdateProfile";
+    }
+
+    @GetMapping("/download")
+    public void display(HttpServletResponse response, @RequestParam String filePath) throws  Exception {
+        System.out.println("this is image:" +filePath);
+        response.setContentType("Image/jpg");
+        File file = new File("C:\\fileUpload\\" +filePath);
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+        ServletOutputStream outputStream = response.getOutputStream();
+        IOUtils.copy(inputStream, outputStream);
+        response.flushBuffer();
+    }
+
+    @PostMapping("/forget")
+    public String forgetPassowrd(@RequestParam String email, @RequestParam String newPassword, @RequestParam String confirmPassword){
+        System.out.println("recieve request for reseting password:");
+        System.out.println("Email in ForgetPassword:"+email);
+        System.out.println("NewPassword in formgetPassword method:"+newPassword);
+        System.out.println("Confirm Password:"+confirmPassword);
+
+        String response = service.resetPasswordByEmail(email,newPassword,confirmPassword);
+
+        if("password updated successfully".equals(response)) {
+            return "resetPassword";
+
+        }else {
+            return "forgetPassword";
+        }
+
+
     }
 }
+
+
+

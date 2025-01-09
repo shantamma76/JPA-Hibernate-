@@ -207,7 +207,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public Set<ConstraintViolation<ModuleDTO>> updateDetails(String userName, ModuleDTO moduleDTO) {
+    public Set<ConstraintViolation<ModuleDTO>> updateDetails(String userName, ModuleDTO moduleDTO,String filePath) {
         if (moduleDTO != null) {
             moduleDTO.setName(userName);
             System.out.println("service:"+moduleDTO.toString());
@@ -217,12 +217,22 @@ public class ModuleServiceImpl implements ModuleService {
 
             if (set.isEmpty()) {
                 System.out.println("------------------");
-                boolean updated = repository.updateDetails(userName, moduleDTO);
+                boolean updated = repository.updateDetails(userName, moduleDTO,filePath);
             }
             return set;
         }
         return null;
     }
+
+    @Override
+    public String resetPasswordByEmail(String email, String newPassword, String confirmPassword) {
+        System.out.println("reset password in service");
+        if(newPassword.equals(confirmPassword)){
+
+        }
+        return "";
+    }
+
 }
 
 

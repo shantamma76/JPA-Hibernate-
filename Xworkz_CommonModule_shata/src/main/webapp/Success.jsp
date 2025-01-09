@@ -67,6 +67,9 @@
         <p>Your operation was completed successfully.</p>
         <a href="index.jsp" class="btn btn-warning">Go to Home</a> </br>
 
+    <img src="download?filePath=${filePath}" alt="profile picture" width="100" height="100">
+
+      <!-- Upadte profile form below -->
         <form action="update" method="get">
         <input type="text" name="name" value="${userName}"/>
         <input type="submit" value="update signup">
